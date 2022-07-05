@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CrudService } from 'src/app/Unauthenticated/shared/crud.service';
 import { AuthService } from 'src/app/Authentication/shared/auth.service';
@@ -20,7 +20,7 @@ export class ProfileComponent implements OnInit {
   selectedFile: any;
   uploadPercent: Observable<number>;
 
-  ProfileForm: FormGroup;
+  ProfileForm: UntypedFormGroup;
 
   validation_messages = {
     'uname': [
@@ -48,7 +48,7 @@ export class ProfileComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private firebaseService: CrudService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private authService: AuthService,
     private acrud: ACrudService
   ) { }

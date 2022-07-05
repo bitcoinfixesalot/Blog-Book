@@ -3,7 +3,7 @@ import { Params, ActivatedRoute, Router } from '@angular/router';
 import { ACrudService } from 'src/app/Authentication/shared/acrud.service';
 import { Subscription, Observable } from 'rxjs';
 import { UPost } from 'src/app/Unauthenticated/shared/UPost.model';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { CrudService } from 'src/app/Unauthenticated/shared/crud.service';
 import { callbackify } from 'util';
 import { count } from 'rxjs/operators';
@@ -15,7 +15,7 @@ import { count } from 'rxjs/operators';
 })
 export class UserEditComponent implements OnInit {
 
-  exampleForm: FormGroup;
+  exampleForm: UntypedFormGroup;
 
 
   id: number
@@ -65,7 +65,7 @@ export class UserEditComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     public acrud: ACrudService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private firebaseService: CrudService,
   ) { }
 

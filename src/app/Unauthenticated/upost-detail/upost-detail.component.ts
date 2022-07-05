@@ -6,7 +6,7 @@ import { ACrudService } from 'src/app/Authentication/shared/acrud.service';
 
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/Authentication/shared/auth.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 
 @Component({
@@ -16,7 +16,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 })
 export class UPostDetailComponent implements OnInit {
-  CommentForm: FormGroup;
+  CommentForm: UntypedFormGroup;
 
   id: number;
   unauthpostss: UPost[];
@@ -69,7 +69,7 @@ export class UPostDetailComponent implements OnInit {
     private cd: CrudService,
     public acrud: ACrudService,
     private authService: AuthService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
   ) { }
 
 

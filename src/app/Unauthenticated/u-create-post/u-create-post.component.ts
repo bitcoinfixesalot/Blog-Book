@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CrudService } from '../shared/crud.service';
 import { UPost } from '../shared/UPost.model';
@@ -20,7 +20,7 @@ export class UCreatePostComponent implements OnInit {
   isloading: boolean
   isprofileset
   isimgloading: boolean
-  exampleForm: FormGroup;
+  exampleForm: UntypedFormGroup;
   values = ['Happy', 'Sad', 'Success', 'Failure', 'Hurt', 'Study', 'Educational', 'Portfolio', 'Other'];
   selected = 'Happy'
   imageSrc: string | ArrayBuffer;
@@ -55,7 +55,7 @@ export class UCreatePostComponent implements OnInit {
   constructor(
     private router: Router,
     private firebaseService: CrudService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private authService: AuthService,
     private acrud: ACrudService
 
