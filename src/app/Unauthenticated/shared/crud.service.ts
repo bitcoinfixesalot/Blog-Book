@@ -3,8 +3,8 @@ import { UPost } from './UPost.model';
 import { finalize, catchError } from 'rxjs/operators';
 import { Observable, Subject, throwError } from 'rxjs';
 import { Router } from '@angular/router';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { AngularFireStorage } from '@angular/fire/storage';
+import { AngularFirestore,  } from '@angular/fire/compat/firestore';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class CrudService {
   selectedFile: any | null;
   currentDate = new Date();
   downloadurlchange: Subject<any> = new Subject<any>();
-  filepath: string
+  filepath: string;
   uid: any;
   uname: any;
   constructor(
@@ -41,19 +41,19 @@ export class CrudService {
   }
 
   getdata(data) {
-    this.selectedFile = data
+    this.selectedFile = data;
 
   }
 
 
   get_public_post() {
-    return this.afs.collection('normal-users').snapshotChanges().pipe(catchError(this.handleError))
+    return this.afs.collection('normal-users').snapshotChanges().pipe(catchError(this.handleError));
 
   }
 
   sendUidandUname(uname, id) {
-    this.uid = id
-    this.uname = uname
+    this.uid = id;
+    this.uname = uname;
   }
   createUser(value: UPost) {
     return this.afs.collection(`normal-users`).add({
@@ -67,7 +67,7 @@ export class CrudService {
       imgurl: this.downloadURL,
       uid: this.uid,
       uname: this.uname
-    })
+    });
 
   }
 
@@ -77,7 +77,7 @@ export class CrudService {
     const file = this.selectedFile;
 
 
-    this.filepath = "UauthUsers"
+    this.filepath = 'UauthUsers';
 
     const filePath = `${this.filepath}/${file.name}`;
     const fileRef = this.afStorage.ref(filePath);
@@ -87,14 +87,14 @@ export class CrudService {
       finalize(() => {
         fileRef.getDownloadURL().toPromise().then((url) => {
           this.downloadURL = url;
-          this.downloadurlchange.next(this.downloadURL)
+          this.downloadurlchange.next(this.downloadURL);
 
 
 
-        }).catch(err => { console.log(err) });
+        }).catch(err => { console.log(err); });
       })
     )
-      .subscribe()
+      .subscribe();
   }
 }
 

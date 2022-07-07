@@ -7,7 +7,7 @@ import { throwError, Subject, BehaviorSubject } from 'rxjs';
 import { User, User1 } from './user.model';
 import { Router } from '@angular/router';
 import * as firebase from 'firebase/app';
-import { AngularFireAuth } from '@angular/fire/auth'
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { ToastrService } from 'ngx-toastr';
 export interface AuthResponseData {
   kind: string;
@@ -23,17 +23,17 @@ export interface AuthResponseData {
 })
 export class AuthService {
   isAuthenticated = false;
-  api = environment.firebaseConfig.apiKey
+  api = environment.firebaseConfig.apiKey;
   user = new BehaviorSubject<User>(null);
   private tokenExpirationTimer: any;
-  userdata = null
+  userdata = null;
   userData: any;
   LoginData = new BehaviorSubject<any>(null);
   constructor(private http: HttpClient,
-    public afAuth: AngularFireAuth,
-    private router: Router,
-    private toastr: ToastrService,
-    public ngZone: NgZone) {
+              public afAuth: AngularFireAuth,
+              private router: Router,
+              private toastr: ToastrService,
+              public ngZone: NgZone) {
     this.afAuth.authState.subscribe(user => {
       if (user) {
         this.userData = user;
@@ -43,7 +43,7 @@ export class AuthService {
         localStorage.setItem('user', null);
         JSON.parse(localStorage.getItem('user'));
       }
-    })
+    });
   }
 
 
@@ -52,8 +52,8 @@ export class AuthService {
       .post<AuthResponseData>(
         'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=' + this.api,
         {
-          email: email,
-          password: password,
+          email,
+          password,
           returnSecureToken: true
         }
       )
@@ -76,8 +76,8 @@ export class AuthService {
       .post<AuthResponseData>(
         'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=' + this.api,
         {
-          email: email,
-          password: password,
+          email,
+          password,
           returnSecureToken: true
         }
       )
@@ -97,10 +97,10 @@ export class AuthService {
 
   doGoogleLogin() {
     return new Promise<any>((resolve, reject) => {
-      let provider = new firebase.auth.GoogleAuthProvider();
+      const provider = new firebase.auth.GoogleAuthProvider();
       provider.addScope('profile');
       provider.addScope('email');
-      this.afAuth.auth
+      this.afAuth
         .signInWithPopup(provider)
         .then(res => {
           this.handleAuthentication(
@@ -114,8 +114,8 @@ export class AuthService {
         }, err => {
 
           reject(err);
-        })
-    })
+        });
+    });
   }
   autoLogin() {
     const userData: {
@@ -146,7 +146,7 @@ export class AuthService {
   }
 
   logout() {
-    return this.afAuth.auth.signOut().then(() => {
+    return this.afAuth.signOut().then(() => {
       this.user.next(null);
 
       localStorage.removeItem('userData');
@@ -156,7 +156,7 @@ export class AuthService {
       this.tokenExpirationTimer = null;
 
       this.router.navigate(['/auth']);
-    })
+    });
 
   }
 
@@ -174,7 +174,7 @@ export class AuthService {
   ) {
     const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
     const user = new User(email, userId, token, expirationDate);
-    this.userdata = user
+    this.userdata = user;
     this.user.next(user);
     this.autoLogout(expiresIn * 1000);
     localStorage.setItem('userData', JSON.stringify(user));
@@ -205,8 +205,8 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     this.user.subscribe(userdata => {
-      this.userdata = userdata
-    })
+      this.userdata = userdata;
+    });
     if (this.userdata !== null) {
 
       return true;
@@ -214,37 +214,38 @@ export class AuthService {
   }
 
   sendEmailVerification() {
-    this.afAuth.auth.currentUser.sendEmailVerification()
+    this.afAuth.currentUser.then(a => a.sendEmailVerification());
 
     this.router.navigate(['auth']);
   }
 
   async sendPasswordResetEmail(passwordResetEmail: string) {
-    return await this.afAuth.auth.sendPasswordResetEmail(passwordResetEmail)
+    return await this.afAuth.sendPasswordResetEmail(passwordResetEmail)
       .then(() => {
         if (this.isAuthenticated) {
-          this.logout()
+          this.logout();
         }
         this.router.navigate(['auth']);
         this.showSuccess();
-      })
+      });
 
   }
 
 
   SignUp(email, password) {
-    return this.afAuth.auth.createUserWithEmailAndPassword(email, password)
+    return this.afAuth.createUserWithEmailAndPassword(email, password)
       .then((result) => {
 
-        this.logout()
+        this.logout();
         this.SendVerificationMail(); // Sending email verification notification, when new user registers
-      })
+      });
   }
 
   SendVerificationMail() {
-    return this.afAuth.auth.currentUser.sendEmailVerification()
+    return this.afAuth.currentUser.then(a => a.sendEmailVerification())
+
       .then(() => {
-        this.showError()
+        this.showError();
         this.router.navigate(['verify-mail']);
 
 
@@ -253,16 +254,16 @@ export class AuthService {
       .catch(e => {
         this.toastr.warning(e.message, 'Alert', {
           timeOut: 5000
-        })
-      })
+        });
+      });
 
   }
 
 
   SignIn(email, password) {
-    return this.afAuth.auth.signInWithEmailAndPassword(email, password)
+    return this.afAuth.signInWithEmailAndPassword(email, password)
       .then((result) => {
-        this.LoginData.next(result)
+        this.LoginData.next(result);
 
 
         if (result.user.emailVerified !== true) {
@@ -273,14 +274,14 @@ export class AuthService {
           this.SetUserData(result.user);
         }
 
-      })
+      });
 
 
   }
 
   isLoggedIn1() {
     const user = JSON.parse(localStorage.getItem('user'));
-    this.user.next(user)
+    this.user.next(user);
     return (user !== null && user.emailVerified !== false) ? true : false;
   }
 
@@ -292,10 +293,11 @@ export class AuthService {
       displayName: user.displayName,
       photoURL: user.photoURL,
       emailVerified: user.emailVerified
-    }
+    };
 
 
 
+    // tslint:disable-next-line:no-shadowed-variable
     this.afAuth.authState.subscribe(user => {
       if (user) {
         this.userData = user;
@@ -303,12 +305,12 @@ export class AuthService {
         localStorage.setItem('user', JSON.stringify(this.userData));
         const user1 = JSON.parse(localStorage.getItem('user'));
 
-        this.user.next(user1)
+        this.user.next(user1);
       } else {
         localStorage.setItem('user', null);
         JSON.parse(localStorage.getItem('user'));
       }
-    })
+    });
 
   }
   showSuccess() {

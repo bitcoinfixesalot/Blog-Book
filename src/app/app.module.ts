@@ -5,13 +5,24 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
-import { AngularFirestoreModule } from '@angular/fire/firestore'
-import {
-  AngularFireStorageModule,
-  AngularFireStorageReference,
-  AngularFireUploadTask,
+// import { AngularFirestoreModule } from '@angular/fire/firestore';
+// import {
+//   AngularFireStorageModule,
+//   AngularFireStorageReference,
+//   AngularFireUploadTask,
 
-} from "@angular/fire/storage";
+// } from "@angular/fire/storage";
+// import { AngularFireModule } from '@angular/fire';
+// import { AngularFireAuthModule } from '@angular/fire/auth';
+
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+
+
+
+
 import { AppComponent } from './app.component';
 import { HomeComponent } from './Unauthenticated/home/home.component';
 import { UCreatePostComponent } from './Unauthenticated/u-create-post/u-create-post.component';
@@ -20,12 +31,12 @@ import { UPostDetailComponent } from './Unauthenticated/upost-detail/upost-detai
 import { CrudService } from './Unauthenticated/shared/crud.service';
 import { AuthComponentComponent } from './Authentication/auth-component/auth-component.component';
 import { AuthService } from './Authentication/shared/auth.service';
-import { AngularFireAuthModule } from '@angular/fire/auth';
 
 import { ACrudService } from './Authentication/shared/acrud.service';
 import { UserPostComponent } from './user/user-post/user-post.component';
 import { environment } from 'src/environments/environment';
-import { AngularFireModule } from '@angular/fire';
+
+
 import { UserEditComponent } from './user/user-edit/user-edit.component';
 import { ProfileComponent } from './user/profile/profile.component';
 import { ViewProfileComponent } from './user/view-profile/view-profile.component';
@@ -59,8 +70,8 @@ import { NoSanitizePipe } from './Authentication/shared/no-sanitize.pipe';
     VerifyMailComponent,
     NoSanitizePipe,
 
-    
-    
+
+
   ],
   imports: [
     BrowserModule,
@@ -70,14 +81,14 @@ import { NoSanitizePipe } from './Authentication/shared/no-sanitize.pipe';
     FormsModule,
     ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
-    AngularFireAuthModule,
-    AngularFireStorageModule,
-    AngularFirestoreModule, // imports firebase/firestore, only needed for database features
+     AngularFireAuthModule,
+     AngularFireStorageModule,
+     AngularFirestoreModule, // imports firebase/firestore, only needed for database features
     Ng2SearchPipeModule,
     ToastrModule.forRoot()
 
   ],
-  providers: [CrudService,AuthService,ACrudService,AuthGuard],
+  providers: [CrudService, AuthService, ACrudService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

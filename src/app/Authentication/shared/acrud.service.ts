@@ -5,7 +5,7 @@ import { CrudService } from 'src/app/Unauthenticated/shared/crud.service';
 import { Subscription, Observable, BehaviorSubject, forkJoin, zip } from 'rxjs';
 import { AuthService } from './auth.service';
 import { map } from 'rxjs/operators';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 import { Profile, User1 } from './user.model';
 import { ToastrService } from 'ngx-toastr';
@@ -21,30 +21,35 @@ import { ToastrService } from 'ngx-toastr';
 export class ACrudService {
 
 
-  postdata = {}
-  uid: string
+  postdata = {};
+  uid: string;
 
-  d1 = []
-  d2 = []
-  d3 = []
-  d4 = []
+  d1 = [];
+  d2 = [];
+  d3 = [];
+  d4 = [];
 
-  url: string
-  post_id
+  url: string;
+  // tslint:disable-next-line:variable-name
+  post_id: number;
 
-  list: any
+  list: any;
   OthersUid = new BehaviorSubject<string>(null);
   pu = new BehaviorSubject<any>(null);
   pr = new BehaviorSubject<any>('');
   all = new BehaviorSubject<any>(this.d3);
   all3 = new BehaviorSubject<any>(this.d3);
-  username = new BehaviorSubject<string>("");
+  username = new BehaviorSubject<string>('');
   PostDataForLikeCount = new BehaviorSubject<number>(null);
   PostDataForLikedByUser = new BehaviorSubject<any>(null);
+  // tslint:disable-next-line:variable-name
   db_key: string;
   firestorekey: string;
+  // tslint:disable-next-line:max-line-length
   x: Observable<{ title: string; desc: string; created_date?: Date; imgurl: string; category: string; subcategory?: string; name: string; privacy: string; id: string; }[]>;
+  // tslint:disable-next-line:max-line-length
   ProfieData: { id: string; uname: string; desc: string; email: string; name: string; created_date?: Date; imgurl: Observable<string>; isProfileSet: boolean };
+  // tslint:disable-next-line:max-line-length
   editedProfileData: { id: string; uname: string; desc: string; email: string; name: string; imgurl: Observable<string>; created_date?: Date; isProfileSet: boolean; };
   uname: any;
   id: any;
@@ -59,25 +64,25 @@ export class ACrudService {
 
   constructor(private http: HttpClient,
 
-    private ucrud: CrudService,
-    private authService: AuthService,
-    private afs: AngularFirestore,
-    private router: Router,
-    private toastr: ToastrService) {
+              private ucrud: CrudService,
+              private authService: AuthService,
+              private afs: AngularFirestore,
+              private router: Router,
+              private toastr: ToastrService) {
 
 
     setTimeout(() => {
       this.authService.user.subscribe(data => {
 
         if (data) {
-          this.uid = data.id
+          this.uid = data.id;
         }
 
 
       }
 
-      )
-    }, 2000)
+      );
+    }, 2000);
 
 
 
@@ -87,30 +92,30 @@ export class ACrudService {
       this.authService.user.subscribe((user) => {
         if (user) {
 
-          this.uid = user.uid
+          this.uid = user.uid;
 
 
         }
-        res(this.uid)
+        res(this.uid);
 
-      })
+      });
 
-    })
+    });
   }
   sortDesecending(Post) {
 
 
     Post.sort((a: any, b: any) =>
       b.created_date - a.created_date
-    )
+    );
 
 
-    return Post
+    return Post;
   }
 
 
   createProfile(value: Profile) {
-    this.getUid()
+    this.getUid();
     this.ProfieData = {
       id: this.uid,
       uname: value.uname,
@@ -121,8 +126,8 @@ export class ACrudService {
       imgurl: this.ucrud.downloadURL,
       isProfileSet: true
 
-    }
-    this.createPublicProfile(this.ProfieData, this.ProfieData.uname)
+    };
+    this.createPublicProfile(this.ProfieData, this.ProfieData.uname);
     this.getUid().then(d => {
 
 
@@ -133,9 +138,9 @@ export class ACrudService {
 
         .subscribe(responseData => {
 
-          this.showSuccessCreateProfile()
+          this.showSuccessCreateProfile();
         });
-    })
+    });
 
 
 
@@ -157,18 +162,18 @@ export class ACrudService {
 
   getProfile(): Observable<Profile[]> {
 
-    this.getUid()
+    this.getUid();
     if (this.uid) {
 
 
-      return this.http.get<Profile[]>(`https://write-your-heart-out-b338b.firebaseio.com/post/${this.uid}/profile.json`)
+      return this.http.get<Profile[]>(`https://write-your-heart-out-b338b.firebaseio.com/post/${this.uid}/profile.json`);
     }
     else {
       this.getUid().then((d: any) => {
 
-        this.uid = d
-        return this.http.get<Profile[]>(`https://write-your-heart-out-b338b.firebaseio.com/post/${this.uid}/profile.json`)
-      })
+        this.uid = d;
+        return this.http.get<Profile[]>(`https://write-your-heart-out-b338b.firebaseio.com/post/${this.uid}/profile.json`);
+      });
     }
 
   }
@@ -186,10 +191,10 @@ export class ACrudService {
       uid: this.id,
       uname: this.uname,
 
-    }
-    if (value.privacy == "true") {
+    };
+    if (value.privacy == 'true') {
       this.getUid().then((d: any) => {
-        this.uid = d
+        this.uid = d;
         this.http.post(
           `https://write-your-heart-out-b338b.firebaseio.com/post/${this.uid}/public.json`,
           this.postdata
@@ -203,7 +208,7 @@ export class ACrudService {
 
             })
           ;
-      })
+      });
 
 
     }
@@ -220,32 +225,32 @@ export class ACrudService {
     }
   }
   getPublicPost(): Observable<UPost[]> {
-    return this.http.get<UPost[]>(`https://write-your-heart-out-b338b.firebaseio.com/post/${this.uid}/public.json`)
+    return this.http.get<UPost[]>(`https://write-your-heart-out-b338b.firebaseio.com/post/${this.uid}/public.json`);
 
   }
 
   getPrivatePost(): Observable<UPost[]> {
-    return this.http.get<UPost[]>(`https://write-your-heart-out-b338b.firebaseio.com/post/${this.uid}/private.json`)
+    return this.http.get<UPost[]>(`https://write-your-heart-out-b338b.firebaseio.com/post/${this.uid}/private.json`);
 
   }
 
   getAllData() {
-    this.getUid()
-    let x = this.http.get<UPost[]>(`https://write-your-heart-out-b338b.firebaseio.com/post/${this.uid}/public.json`)
-    let y = this.http.get<UPost[]>(`https://write-your-heart-out-b338b.firebaseio.com/post/${this.uid}/private.json`)
-    return forkJoin(x, y)
+    this.getUid();
+    const x = this.http.get<UPost[]>(`https://write-your-heart-out-b338b.firebaseio.com/post/${this.uid}/public.json`);
+    const y = this.http.get<UPost[]>(`https://write-your-heart-out-b338b.firebaseio.com/post/${this.uid}/private.json`);
+    return forkJoin(x, y);
 
 
   }
   seprate(x1) {
-    let x3 = []
+    const x3 = [];
     for (const key in x1) {
 
       if (x1.hasOwnProperty(key)) {
         x3.push({ ...x1[key] });
       }
     }
-    return x3
+    return x3;
 
   }
 
@@ -264,10 +269,10 @@ export class ACrudService {
         })
       )
       .subscribe(posts => {
-        this.d1 = posts
+        this.d1 = posts;
 
-        this.pr.next(posts)
-        this.combine()
+        this.pr.next(posts);
+        this.combine();
 
         return this.d1;
       });
@@ -288,18 +293,18 @@ export class ACrudService {
         })
       )
       .subscribe(posts => {
-        this.pu.next(posts)
-        this.d2 = posts
+        this.pu.next(posts);
+        this.d2 = posts;
 
-        this.combine()
+        this.combine();
 
         return this.d2;
       });
   }
 
   combine() {
-    this.d3 = this.d2.concat(this.d1)
-    this.all.next(this.d3)
+    this.d3 = this.d2.concat(this.d1);
+    this.all.next(this.d3);
   }
 
 
@@ -319,37 +324,37 @@ export class ACrudService {
       uid: value.uid,
       uname: value.uname
 
-    }
+    };
 
     this.Comare_In_FireStore(value, formvalue)
 
     if (value.privacy == "true") {
       if (formvalue.privacy == "true") {
 
-        let c = this.pb(id, value)
-        this.Edit_Public_Post(this.postdata, c)
-        this.EditInFireStore(this.postdata, value)
+        let c = this.pb(id, value);
+        this.Edit_Public_Post(this.postdata, c);
+        this.EditInFireStore(this.postdata, value);
 
       }
       else {
 
-        this.Create_Private_Post(this.postdata)
-        let c = this.pb(id, value)
-        this.deletePublicPost(this.postdata, c)
-        this.deleteFromFireStore(value)
+        this.Create_Private_Post(this.postdata);
+        let c = this.pb(id, value);
+        this.deletePublicPost(this.postdata, c);
+        this.deleteFromFireStore(value);
 
       }
     }
     else {
       if (formvalue.privacy == "false") {
-        let c = this.getpr(value)
-        this.Edit_Private_Post(this.postdata, c)
+        let c = this.getpr(value);
+        this.Edit_Private_Post(this.postdata, c);
       }
       else {
-        this.Create_Public_Post(this.postdata)
-        let c = this.getpr(value)
-        this.deletePrivatePost(this.postdata, c)
-        this.CreateInFireStore(this.postdata)
+        this.Create_Public_Post(this.postdata);
+        let c = this.getpr(value);
+        this.deletePrivatePost(this.postdata, c);
+        this.CreateInFireStore(this.postdata);
 
       }
 
